@@ -1,16 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import User from './Components/User/User';
 
 export default function App() {
+  const [name, setName] = useState('')
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data);
+      })
+  }, [])
   return (
-    <ScrollView >
-      <styles></styles>
-      <Text>Some text</Text>
+    <SafeAreaView style={styles.container}>
       <View>
-        <Text
-          style={{ color: 'red', fontSize: "30" }}
-        >Some more text</Text>
+        <Text>Hello React Native app!!</Text>
+        <StatusBar style="auto" />
         <Image
           source={{
             uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
@@ -18,23 +26,37 @@ export default function App() {
           style={{ width: 200, height: 200 }}
         />
       </View>
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1
-        }}
-        defaultValue="You can type in me"
-      />
-    </ScrollView>
+      <View>
+        <Text style={{ fontSize: 40 }}>
+          {name}
+        </Text>
+        <Text>
+          My Name Is Shakil Khan
+        </Text>
+        <Text>Hi I am scroll View</Text>
+        <TextInput
+          onChangeText={text => setName(text)}
+          style={{ height: 40, borderColor: 'red', textAlign: 'center', width: 240, borderBottomWidth: .5 }}
+          placeholder="please type your name here">
+        </TextInput>
+      </View>
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator color='red' />
+      </View>
+    </SafeAreaView>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  }
 });
